@@ -1,0 +1,19 @@
+---
+  - hosts: all
+    become: true
+    remote_user: centos
+    tasks:
+    - name: Install git
+      yum:
+        name: git
+        state: latest
+
+    - name: Execute stream benchmark
+      script: ./scripts/stream.sh
+    
+      # - name: check files
+      #   shell: ls -a
+      #   register: test_out
+
+      # - name: output files
+      #   debug: var=test_out.stdout_lines

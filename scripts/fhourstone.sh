@@ -1,4 +1,5 @@
 #!/bin/bash
+
 mkdir fhourstones
 cd fhourstones
 git clone https://github.com/qu1j0t3/fhourstones.git
