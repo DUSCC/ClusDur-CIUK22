@@ -32,4 +32,6 @@ echo "converting pme.mdp to bench.tpr"
 
 echo "running simulation"
 # run with
-~/gromacs-challenge-cpu/compiled/bin/gmx mdrun -nsteps 1000 -v -s bench.tpr
+~/gromacs-challenge-cpu/compiled/bin/gmx mdrun -nsteps 1000 -v -g -s bench.tpr
+lscpu >> ~/gromacs-challenge-gpu/water-cut1.0_GMX50_bare/1536/md.log
+mv ~/gromacs-challenge-gpu/water-cut1.0_GMX50_bare/1536/md.log ~/gromacs-challenge-gpu/results.txt
