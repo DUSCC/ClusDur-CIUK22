@@ -98,5 +98,5 @@ if __name__ == '__main__':
 
     server = Server(name, flavor)
     os.system(f"ansible-playbook -i {server.floating_ip}, ./benchmarking.yaml")
-    os.system("scp -r centos@$IP:/home/centos/results/ ./test/")
+    os.system(f"scp -r centos@{server.floating_ip}:/home/centos/results/ ./test/")
     server.delete()
