@@ -108,6 +108,7 @@ if __name__ == '__main__':
         print("Flavor does not exist. Build Exiting.")
         exit(0)
 
+    os.chdir("/home/team2/Documents/ClusDur-CIUK22")
     server = Server(args.name, args.flavor)
     if not args.no_provision:
         os.system(f"ansible-playbook -i {server.floating_ip}, ./benchmarking.yaml")
