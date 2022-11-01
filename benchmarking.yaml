@@ -3,7 +3,6 @@
     become: true
     remote_user: centos
     tasks:
-    # INSTALL PREREQUISITES
     - name: Install git
       yum:
         name: git
@@ -30,19 +29,6 @@
           - openmpi
           - openmpi-devel
         state: latest
-
-    # HPL
-    - name: Add OpenMPI to system-wide $PATH.
-      copy:
-        dest: /etc/profile.d/openmpi-path.sh
-        content: "PATH=$PATH:/usr/lib64/openmpi/bin"
-
-    - name: echo PATH
-      shell: echo $PATH
-      register: path_out
-
-    - name: output PATH
-      debug: var=path_out.stdout_lines
 
     - name: Create results directory
       file:

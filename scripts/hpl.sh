@@ -1,11 +1,12 @@
 #!/bin/bash
 
+export PATH=$PATH:/usr/lib64/openmpi/bin
 #build and install OpenBLAS
 git clone https://github.com/xianyi/OpenBLAS.git 
 cd OpenBLAS
 make -j 20
 make PREFIX=../install_openblas install
-cd ~
+cd /home/centos
 
 #build and install HPL
 wget http://www.netlib.org/benchmark/hpl/hpl-2.3.tar.gz
@@ -25,4 +26,4 @@ cp ~/HPL1.dat ./HPL.dat
 mpirun -n 1 -bind-to core ./xhpl
 mv HPL.out ~/results/HPL1.txt
 
-cd ~
+cd /home/centos
