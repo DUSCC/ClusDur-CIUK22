@@ -1,2 +1,2 @@
 # ClusDur-CIUK22
-Scripts and results for challenge 1
+Scripts and results for alcesflight challenge
