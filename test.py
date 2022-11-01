@@ -4,6 +4,7 @@ import json
 import time
 from datetime import timedelta
 
+
 CONSTANTS = {'image': "\"Centos 8 Stream - Generic Cloud\"",
              'key-name': "alSSHflight"}
 
@@ -57,12 +58,12 @@ class Server:
             print("No available floating IPs could be allocated. Exiting.")
             self.delete()
 
-        print(f"Attaching floating ip {self.floating_ip} to {self.name}")
+        print(f"[{self.elapsed_time}] Attaching floating ip {self.floating_ip} to {self.name}")
         output = os.popen(f"openstack server add floating ip {self.id} {self.floating_ip}")
         print(output.read())
 
     def delete(self):
-        print(f"Deleting server {self.name}")
+        print(f"[{self.elapsed_time}] Deleting server {self.name}")
         output = os.popen(f"openstack server delete {self.id} -f json")
         print(output.read())
         exit(0)
@@ -84,8 +85,8 @@ def get_floating_ip():
 
 
 if __name__ == '__main__':
-    name = "ClusDur-baremetal-amd128"
-    flavor = "baremetal.amd.128.100gb"
+    name = "ClusDur-vm-amd128"
+    flavor = "vm.amd.128"
     if get_floating_ip() is None:
         print("No floating IPs could be found. Build exiting.")
         exit(0)
@@ -95,3 +96,6 @@ if __name__ == '__main__':
         exit(0)
 
     server = Server(name, flavor)
+    os.system(f"ansible-playbook -i {server.floating_ip}, ./benchmarking.yaml")
+    os.system("scp -r centos@$IP:/home/centos/results/ ./test/")
+    server.delete()
