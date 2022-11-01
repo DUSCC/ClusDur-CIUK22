@@ -1,0 +1,97 @@
+#!/bin/python3
+import os
+import json
+import time
+from datetime import timedelta
+
+CONSTANTS = {'image': "\"Centos 8 Stream - Generic Cloud\"",
+             'key-name': "alSSHflight"}
+
+DEFAULTS = {'baremetal': {'network': "baremetal",
+                          'config-drive': True,
+                          **CONSTANTS},
+            'vm': {'network': "vm-network",
+                   'config-drive': False,
+                   **CONSTANTS}
+            }
+
+
+class Server:
+    def __init__(self, server_name, flavor):
+        self.name = server_name
+        self.flavor = flavor
+        self.status = "BUILD"
+        self.id = None
+        self.floating_ip = None
+        self.start_time = time.time()
+
+        self.create()
+
+    @property
+    def elapsed_time(self):
+        elapsed_time = time.time() - self.start_time
+        return str(timedelta(seconds=elapsed_time))[:-7]  # remove microseconds
+
+    def create(self):
+        server_type = "vm" if "vm" in self.flavor else "baremetal"
+        cli_args = ' '.join(f"--{key} {value}" for key, value in DEFAULTS[server_type].items())
+
+        print(f"[{self.elapsed_time}] Creating server {self.name} with flavor {self.flavor}")
+        output = os.popen(f"openstack server create {cli_args} --flavor {self.flavor} {self.name} -f json")
+        self.id = json.loads(output.read()).get('id')
+
+        while self.status == "BUILD":
+            self.status = json.loads(os.popen(f"openstack server show {self.id} -f json").read()).get('status')
+            print(f"\r[{self.elapsed_time}] Server in {self.status} status ")
+            time.sleep(5)
+
+        if self.status == "ERROR":
+            print("Build failed. Exiting.")
+            self.delete()
+
+        self.allocate_floating_ip()
+
+    def allocate_floating_ip(self):
+        self.floating_ip = get_floating_ip()
+        if self.floating_ip is None:
+            print("No available floating IPs could be allocated. Exiting.")
+            self.delete()
+
+        print(f"Attaching floating ip {self.floating_ip} to {self.name}")
+        output = os.popen(f"openstack server add floating ip {self.id} {self.floating_ip}")
+        print(output.read())
+
+    def delete(self):
+        print(f"Deleting server {self.name}")
+        output = os.popen(f"openstack server delete {self.id} -f json")
+        print(output.read())
+        exit(0)
+
+
+def flavor_exists(flavor):
+    flavors = set(flavor['Name'] for flavor in json.loads(os.popen("openstack flavor list -f json").read()))
+    return flavor in flavors
+
+
+def get_floating_ip():
+    floating_ips = json.loads(os.popen("openstack floating ip list -f json").read())
+    try:
+        floating_ip = next(ip['Floating IP Address'] for ip in floating_ips if ip['Fixed IP Address'] is None)
+    except StopIteration:
+        return None
+
+    return floating_ip
+
+
+if __name__ == '__main__':
+    name = "ClusDur-baremetal-amd128"
+    flavor = "baremetal.amd.128.100gb"
+    if get_floating_ip() is None:
+        print("No floating IPs could be found. Build exiting.")
+        exit(0)
+
+    if not flavor_exists(flavor):
+        print("Flavor does not exist. Build Exiting.")
+        exit(0)
+
+    server = Server(name, flavor)
