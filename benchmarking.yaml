@@ -3,61 +3,61 @@
     become: true
     remote_user: centos
     tasks:
-    # INSTALL PREREQUISITES
-    - name: Install git
-      yum:
-        name: git
-        state: latest
+      # INSTALL PREREQUISITES
+      - name: Install git
+        yum:
+          name: git
+          state: latest
 
-    - name: Install gcc
-      yum:
-        name: gcc
-        state: latest
+      - name: Install gcc
+        yum:
+          name: gcc
+          state: latest
 
-    - name: Install make
-      yum:
-        name: make
-        state: latest
+      - name: Install make
+        yum:
+          name: make
+          state: latest
 
-    - name: Install wget
-      yum:
-        name: git
-        state: latest
+      - name: Install wget
+        yum:
+          name: git
+          state: latest
 
-    - name: Install openMPI
-      yum:
-        name:
-          - openmpi
-          - openmpi-devel
-        state: latest
+      - name: Install openMPI
+        yum:
+          name:
+            - openmpi
+            - openmpi-devel
+          state: latest
 
-    # HPL
-    - name: Add OpenMPI to system-wide $PATH.
-      copy:
-        dest: /etc/profile.d/openmpi-path.sh
-        content: "PATH=$PATH:/usr/lib64/openmpi/bin"
+      # HPL
+      - name: Add OpenMPI to system-wide $PATH.
+        copy:
+          dest: /etc/profile.d/openmpi-path.sh
+          content: "PATH=$PATH:/usr/lib64/openmpi/bin"
 
-    - name: echo PATH
-      shell: echo $PATH
-      register: path_out
+      - name: echo PATH
+        shell: echo $PATH
+        register: path_out
 
-    - name: output PATH
-      debug: var=path_out.stdout_lines
+      - name: output PATH
+        debug: var=path_out.stdout_lines
 
-    - name: Create results directory
-      file:
-        path: /home/centos/results
-        state: directory
+      - name: Create results directory
+        file:
+          path: /home/centos/results
+          state: directory
 
-    - name: Copy required HPL files to remote
-      copy:
-        src: {{ item }}
-        dest: /home/centos/
-        mode: "0644'
-      with_items:
-        - /scripts/HPL1.dat
-        - /scripts/HPL128.dat
-        - /scripts/Make.intel64
+      - name: Copy required HPL files to remote
+        copy:
+          src: {{ item }}
+          dest: /home/centos/
+          mode: "0644'
+        with_items:
+          - /scripts/HPL1.dat
+          - /scripts/HPL128.dat
+          - /scripts/Make.intel64
 
-    - name: Execute HPL benchmark
-      script: ./scripts/hpl.sh
+      - name: Execute HPL benchmark
+        script: ./scripts/hpl.sh

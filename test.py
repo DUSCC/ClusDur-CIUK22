@@ -43,9 +43,10 @@ class Server:
 
         while self.status == "BUILD":
             self.status = json.loads(os.popen(f"openstack server show {self.id} -f json").read()).get('status')
-            print(f"\r[{self.elapsed_time}] Server in {self.status} status ")
+            print(f"\r[{self.elapsed_time}] Server in {self.status} status ", end='')
             time.sleep(5)
 
+        print()
         if self.status == "ERROR":
             print("Build failed. Exiting.")
             self.delete()
@@ -64,7 +65,7 @@ class Server:
 
     def delete(self):
         print(f"[{self.elapsed_time}] Deleting server {self.name}")
-        output = os.popen(f"openstack server delete {self.id} -f json")
+        output = os.popen(f"openstack server delete {self.id}")
         print(output.read())
         exit(0)
 
