@@ -1,7 +1,9 @@
 #!/bin/python3
+
 import os
 import json
 import time
+import argparse
 from datetime import timedelta
 
 
@@ -86,17 +88,30 @@ def get_floating_ip():
 
 
 if __name__ == '__main__':
-    name = "ClusDur-vm-amd128"
-    flavor = "vm.amd.128"
+    parser = argparse.ArgumentParser()
+    parser.add_argument("name", type=str,
+                        help="The name of the server instance.")
+    parser.add_argument("flavor", type=str,
+                        help="The instance flavor to be used.")
+    parser.add_argument("--no-provision", action="store_true",
+                        help="Do not provision the instance. This will just create a server and assign an IP.")
+    parser.add_argument("--no-delete", action="store_true",
+                        help="Do not delete the instance after this workflow is complete.")
+
+    args = parser.parse_args()
+
     if get_floating_ip() is None:
         print("No floating IPs could be found. Build exiting.")
         exit(0)
 
-    if not flavor_exists(flavor):
+    if not flavor_exists(args.flavor):
         print("Flavor does not exist. Build Exiting.")
         exit(0)
 
-    server = Server(name, flavor)
-    os.system(f"ansible-playbook -i {server.floating_ip}, ./benchmarking.yaml")
-    os.system(f"scp -r centos@{server.floating_ip}:/home/centos/results/ ./test/")
-    server.delete()
+    server = Server(args.name, args.flavor)
+    if not args.no_provision:
+        os.system(f"ansible-playbook -i {server.floating_ip}, ./benchmarking.yaml")
+        os.system(f"scp -r centos@{server.floating_ip}:/home/centos/results/ ./test/")
+
+    if not (args.no_delete or args.no_provision):
+        server.delete()
