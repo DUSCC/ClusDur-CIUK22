@@ -110,7 +110,8 @@ if __name__ == '__main__':
     os.chdir("/home/team2/Documents/ClusDur-CIUK22")
     server = Server(args.name, args.flavor)
     if not args.no_provision:
-        os.system(f"ansible-playbook -i {server.floating_ip}, ./benchmarking.yaml")
+        os.system(f"ansible-playbook -i {server.floating_ip}, ./benchmarking.yaml "
+                  f"--private-key /home/team2/.ssh/alSSHflight.pem")
         os.system(f"scp -r centos@{server.floating_ip}:/home/centos/results/ ./test/")
 
     if not (args.no_delete or args.no_provision):

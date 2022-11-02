@@ -2,7 +2,7 @@
 
 export PATH=$PATH:/usr/lib64/openmpi/bin
 #build and install OpenBLAS
-git clone https://github.com/xianyi/OpenBLAS.git 
+git clone -q https://github.com/xianyi/OpenBLAS.git
 cd OpenBLAS
 make -j 20
 make PREFIX=../install_openblas install

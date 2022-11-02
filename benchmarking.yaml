@@ -1,4 +1,8 @@
 ---
+  - name: Wait 2 minutes for target connection to become reachable
+    wait_for_connection:
+      timeout: 120
+
   - hosts: all
     become: true
     remote_user: centos
@@ -8,9 +12,11 @@
         name: git
         state: latest
 
-    - name: Install gcc
+    - name: Install gcc and c++ extension
       yum:
-        name: gcc
+        name:
+          - gcc
+          - gcc-c++
         state: latest
 
     - name: Install make
@@ -20,7 +26,7 @@
 
     - name: Install wget
       yum:
-        name: git
+        name: wget
         state: latest
 
     - name: Install openMPI
