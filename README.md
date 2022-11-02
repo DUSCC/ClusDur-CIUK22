@@ -66,5 +66,6 @@ https://www.youtube.com/shorts/unm8PH25gGE
 
 ---------------------
 We hope you have fun marking this, and please check our PDF for more details!
-Thank you,
+Many thanks for the hardware and challenge,
+
 Team ClusDur
