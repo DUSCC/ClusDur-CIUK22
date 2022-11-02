@@ -43,6 +43,7 @@ class Server:
         output = os.popen(f"openstack server create {cli_args} --flavor {self.flavor} {self.name} -f json")
         self.id = json.loads(output.read()).get('id')
 
+        self.allocate_floating_ip()
         while self.status == "BUILD":
             self.status = json.loads(os.popen(f"openstack server show {self.id} -f json").read()).get('status')
             print(f"\r[{self.elapsed_time}] Server in {self.status} status ", end='')
@@ -52,8 +53,6 @@ class Server:
         if self.status == "ERROR":
             print("Build failed. Exiting.")
             self.delete()
-
-        self.allocate_floating_ip()
 
     def allocate_floating_ip(self):
         self.floating_ip = get_floating_ip()
