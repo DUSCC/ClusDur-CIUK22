@@ -53,7 +53,7 @@ Now this really was our magnum opus. We are incredibly proud of our workflow per
 	* Shut down and delete the instance automatically
 	* Push all results to github for safety (manually sadly)
 	
-![image](Alces%20Workflow.png)
+![image](Alces%20Workflow_new.png)
 
 This workflow only takes 7.5 minutes to run entirely on a virtual instance and 15 minutes on a bare-metal instance! That's crazy fast but the gap between the two would narrow the more work they have (as the overhead of spinning up a bare metal instance would reduce). This means that the entire work flow stays incredibly economical yet provides good results.
 
