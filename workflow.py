@@ -166,7 +166,7 @@ if __name__ == '__main__':
     if not args.no_provision:
         os.system(f"ansible-playbook -i {server.floating_ip}, ./benchmarking.yaml "
                   f"--private-key /home/team2/.ssh/alSSHflight.pem")
-        os.system(f"scp -i /home/team2/.ssh/alSSHflight.pem -r centos@{server.floating_ip}:/home/centos/results/ ./results/")
+        os.system(f"scp -i /home/team2/.ssh/alSSHflight.pem -r centos@{server.floating_ip}:/home/centos/results/ ./")
 
     if not (args.no_delete or args.no_provision):
         server.delete()
