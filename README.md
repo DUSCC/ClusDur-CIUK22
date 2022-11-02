@@ -14,13 +14,15 @@ For the majoirty of tests, we used the Dell R6525 1U enterprise servers (the AMD
 | Single core floating point performance 	| GFLOP/s 	| 56                 	| N/A :(   	| 47.04      	|
 | Multi-core floating point performance  	| GFLOP/s 	| 5017.6             	| 1824     	| 2913.1     	|
 | Memory Bandwidth                       	| MB/s    	| 25600              	| 92329.4  	| 933796     	|
-| Interconnect Latency                   	| ms      	| N/A :(             	| 0.247251 	| N/A :(     	|
+| Interconnect Latency                   	| ms      	| 0.044336             	| 0.247251 	| N/A :(     	|
 | Interconnect Bandwidth                 	| MB/s    	| 3125               	| 560.37   	| N/A :(     	|
 | I/O Write - 1 Core                     	| MB/s    	| N/A :(             	| 371.33   	| 376.42     	|
 | I/O Read - 1 Core                      	| MB/s    	| N/A :(             	| 14449.73 	| 15156.86   	|
 | I/O Write - 64 Core                    	| MB/s    	| N/A :(             	| 394.92   	| 399.84     	|
 | I/O Read - 64 Core                     	| MB/s    	| Yet another N/A :( 	| 46897.26 	| 108879.39  	|
 ```
+![image](Alces%20Graphs.png)
+
 You can clearly see we benchmarked quite a few things (definitely didn't take us 3 hours!). The main takeaway is that Bare Metal typically performed noticably better than Virtual instances. We weren't too surprised at many of our results, but sadly missed some of them (namely bare metal interconnect) because we struggled to get two of the same instance types up simultaneously by the time we got around to testing those things. We tried!
 
 In our report, we detail how we got these results and try and make sense of them so you should go and read that!
@@ -52,6 +54,12 @@ Now this really was our magnum opus. We are incredibly proud of our workflow per
 	* Return all the results to the login node
 	* Shut down and delete the instance automatically
 	* Push all results to github for safety (manually sadly)
+	
+![image](Alces%20Workflow.png)
+
+This workflow only takes 7.5 minutes to run entirely on a virtual instance and 15 minutes on a bare-metal instance! That's crazy fast but the gap between the two would narrow the more work they have (as the overhead of spinning up a bare metal instance would reduce). This means that the entire work flow stays incredibly economical yet provides good results.
+
+We'd therefore like to say that we'd personally choose the AMD 128 core nodes for a perfect mix of economical, green and still very very fast. We'd also pick bare metal over virtual, as while these cost you a little more, the absolute cost barely rises yet we see a moderate gain in performance.
 
 We think that although our results arent reported in the flashiest way (sorry, no skywriting above your offices), the complexity of our automated workflow allows for an impressive reporting method which stem from a SINGLE command to launch the instances, run all benchmarks and return the results. Don't look at this as a flashy sports car, but rather a swiss army knife that can do literally everything you want it to without breaking down at the first hurdle. That goes for our trigger action too - no need for anything too flashy when all you need is a single command to do all your work for you. To us, THAT is more impressive than some big red button with lights that you need to press several times to execute the next stage of your workflow.
 
