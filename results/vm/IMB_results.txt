@@ -1,0 +1,75 @@
+example2: Hello world! size=1
+example2: Hello world! size=2
+example2: Hello world! size=4
+example2: Hello world! size=8
+example2: Hello world! size=16
+example2: Hello world! size=32
+example2: Hello world! size=64
+example2: Hello world! size=128
+example2: Hello world! size=256
+example2: Hello world! size=512
+example2: Hello world! size=1024
+example2: Hello world! size=2048
+example2: Hello world! size=4096
+example2: Hello world! size=8192
+example2: Hello world! size=16384
+example2: Hello world! size=32768
+example2: Hello world! size=65536
+example2: Hello world! size=131072
+example2: Hello world! size=262144
+example2: Hello world! size=524288
+example2: Hello world! size=1048576
+example2: Hello world! size=2097152
+example2: Hello world! size=4194304
+example2: Hello world! size=1
+example2: Hello world! size=2
+example2: Hello world! size=4
+example2: Hello world! size=8
+example2: Hello world! size=16
+example2: Hello world! size=32
+example2: Hello world! size=64
+example2: Hello world! size=128
+example2: Hello world! size=256
+example2: Hello world! size=512
+example2: Hello world! size=1024
+example2: Hello world! size=2048
+example2: Hello world! size=4096
+example2: Hello world! size=8192
+example2: Hello world! size=16384
+example2: Hello world! size=32768
+example2: Hello world! size=65536
+example2: Hello world! size=131072
+example2: Hello world! size=262144
+example2: Hello world! size=524288
+example2: Hello world! size=1048576
+example2: Hello world! size=2097152
+example2: Hello world! size=4194304
+[clusdur-vm-intel-1.novalocal:38465] 3 more processes have sent help message help-mpi-btl-openib-cpc-base.txt / no cpcs for port
+[clusdur-vm-intel-1.novalocal:38465] Set MCA parameter "orte_base_help_aggregate" to 0 to see all help / error messages
+example3: len=1 time=0.000132816
+example3: len=2 time=0.000121607
+example3: len=4 time=0.000121454
+example3: len=8 time=0.000122131
+example3: len=16 time=0.00012257
+example3: len=32 time=0.000124273
+example3: len=64 time=0.000124638
+example3: len=128 time=0.000128568
+example3: len=256 time=0.000135188
+example3: len=512 time=0.000147105
+example3: len=1024 time=0.000170692
+example3: len=2048 time=0.000197299
+example3: len=4096 time=0.000247251
+example3: len=8192 time=0.000334506
+example3: len=16384 time=0.000469089
+example3: len=32768 time=0.00076144
+example3: len=65536 time=0.00133926
+example3: len=131072 time=0.00249082
+example3: len=262144 time=0.00535594
+example3: len=524288 time=0.00999897
+example3: len=1048576 time=0.0195361
+example3: len=2097152 time=0.0377401
+example3: len=4194304 time=0.0748508
+example4: len=1 time=0.000118587
+example4: len=2 time=0.000118787
+example4: len=4 time=0.000119886
+example4: len=8 time=0.00012027

@@ -1,8 +1,4 @@
 ---
-  - name: Wait 2 minutes for target connection to become reachable
-    wait_for_connection:
-      timeout: 120
-
   - hosts: all
     become: true
     remote_user: centos
@@ -51,9 +47,29 @@
         - ./scripts/HPL128.dat
         - ./scripts/Make.intel64
 
-    - name: Execute HPL benchmark
-      script: ./scripts/hpl.sh
-      register: hpl_out
+    - name: Execute iozone benchmark
+      script: ./scripts/iozone.sh
+      register: iozone_out
 
-    - name: HPL debug
-      debug: var=hpl_out.stdout_lines
+    - name: iozone script output
+      debug: var=iozone_out.stdout_lines
+
+    - name: Copy required stream file to remote
+      copy:
+        src: "./scripts/stream.c"
+        dest: "/home/centos"
+        mode: "0644"
+
+    - name: Execute stream benchmark
+      script: ./scripts/stream.sh
+      register: stream_out
+
+    - name: stream script output
+      debug: var=stream_out.stdout_lines
+
+    - name: Execute fhourstone benchmark
+      script: ./scripts/fhourstone.sh
+      register: fhourstone_out
+
+    - name: fhourstone script output
+      debug: var=fhourstone_out.stdout_lines

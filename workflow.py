@@ -3,7 +3,10 @@
 import os
 import json
 import time
+import socket
+import signal
 import argparse
+from threading import Thread
 from datetime import timedelta
 
 
@@ -19,6 +22,20 @@ DEFAULTS = {'baremetal': {'network': "baremetal",
             }
 
 
+class DelayedKeyboardInterrupt:
+    def __enter__(self):
+        self.signal_received = False
+        self.old_handler = signal.signal(signal.SIGINT, self.handler)
+                
+    def handler(self, sig, frame):
+        self.signal_received = (sig, frame)
+
+    def __exit__(self, type, value, traceback):
+        signal.signal(signal.SIGINT, self.old_handler)
+        if self.signal_received:
+            self.old_handler(*self.signal_received)
+
+
 class Server:
     def __init__(self, server_name, flavor):
         self.name = server_name
@@ -28,7 +45,12 @@ class Server:
         self.floating_ip = None
         self.start_time = time.time()
 
-        self.create()
+        try:
+            self.create()
+        except KeyboardInterrupt:
+            with DelayedKeyboardInterrupt():
+                print(f"[{self.elapsed_time}] Interrupt detected - Cancelling build.")
+                self.delete()
 
     @property
     def elapsed_time(self):
@@ -51,25 +73,57 @@ class Server:
 
         print()
         if self.status == "ERROR":
-            print("Build failed. Exiting.")
+            print(f"[{self.elapsed_time}] Build failed. Exiting.")
             self.delete()
+        else:
+            self.check_ssh()
 
     def allocate_floating_ip(self):
         self.floating_ip = get_floating_ip()
         if self.floating_ip is None:
-            print("No available floating IPs could be allocated. Exiting.")
+            print(f"[{self.elapsed_time}] No available floating IPs could be allocated. Exiting.")
             self.delete()
 
         print(f"[{self.elapsed_time}] Attaching floating ip {self.floating_ip} to {self.name}")
         output = os.popen(f"openstack server add floating ip {self.id} {self.floating_ip}")
-        print(output.read())
+
+    def check_ssh(self):
+        print(f"[{self.elapsed_time}] Attempting connection to host.")
+        num_retries = 36
+        while num_retries > 0:
+            try:
+                conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                conn.connect((self.floating_ip, 22))
+            except Exception as ex:
+                num_retries -= 1
+                print(f"\r[{self.elapsed_time}] Cannot connect to host: {ex}. Retrying {num_retries} more times.  ", end='')
+                time.sleep(5)
+            else:
+                conn.close()
+                print(f"\n[{self.elapsed_time}] Successfully connected to host!")
+                return
+
+        print(f"\n[{self.elapsed_time}] Failed to connect to host.")
+        self.delete()
 
     def delete(self):
-        print(f"[{self.elapsed_time}] Deleting server {self.name}")
-        output = os.popen(f"openstack server delete {self.id}")
-        print(output.read())
-        exit(0)
+        # Python threads will execute even during a KeyboardInterrupt
+        delete_thread = Thread(target=self._delete)
+        delete_thread.start()
+        delete_thread.join()
+    
+    def _delete(self):
+        server_id = self.id if self.id is not None else self.name  # edge case half-fix, only works if nothing else has the same name
+        os.system(f"openstack server delete {server_id}")
 
+        output = "deleting"
+        while output != "":
+            output = os.popen(f"openstack server show {server_id} -f json").read()
+            print(f"\r[{self.elapsed_time}] Deleting server {self.name} ", end='')
+            time.sleep(5)
+
+        print(f"\n[{self.elapsed_time}] Server {self.name} successfully deleted!")
+        exit(0)
 
 def flavor_exists(flavor):
     flavors = set(flavor['Name'] for flavor in json.loads(os.popen("openstack flavor list -f json").read()))
@@ -112,7 +166,9 @@ if __name__ == '__main__':
     if not args.no_provision:
         os.system(f"ansible-playbook -i {server.floating_ip}, ./benchmarking.yaml "
                   f"--private-key /home/team2/.ssh/alSSHflight.pem")
-        os.system(f"scp -r centos@{server.floating_ip}:/home/centos/results/ ./test/")
+        os.system(f"scp -i /home/team2/.ssh/alSSHflight.pem -r centos@{server.floating_ip}:/home/centos/results/ ./results/")
 
     if not (args.no_delete or args.no_provision):
         server.delete()
+    
+    print(f"Workflow finished in [{server.elapsed_time}]")
