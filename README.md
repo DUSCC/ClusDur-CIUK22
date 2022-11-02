@@ -3,7 +3,7 @@ Hello! We are team ClusDur and this is our lengthy report on the AlcesFlight cha
 
 
 ## Challenge 1 - Virtual or Bare Metal?
-For the majoirty of tests, we used the Dell R6525 1U enterprise servers (the AMD EPYC 7763 128 cores), both virtual and bare metal. For some tests (and we shall specify), we used Dell R650 1U (Intel Xeon Silver 4314 16 cores) due to other nodes being unavailable at the times of testing.
+For the majority of tests, we used the Dell R6525 1U enterprise servers (the AMD EPYC 7763 128 cores), both virtual and bare metal. For some tests (and we shall specify), we used Dell R650 1U (Intel Xeon Silver 4314 16 cores) due to other nodes being unavailable at the times of testing.
 
 ```markdown
 | Characteristic                         	| Metric  	| Theoretical Peak   	| Virtual  	| Bare-metal 	|
