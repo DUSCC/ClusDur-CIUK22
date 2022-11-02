@@ -1,5 +1,5 @@
 # ClusDur Alces Flight 22
-Hello! We are team ClusDur and this is our lengthy report on the AlcesFlight challenge. Well, this bit isn't, this is a general overview of the entire challenge. We have a lengthy 9 pages (have fun marking) in the pdf in this repository for you to delve deeper. To make things slightly easier, we'll give you an overview of each part of the marking scheme that we did for you to review and check in our pdf! 
+Hello! We are team ClusDur and this is our lengthy report on the AlcesFlight challenge. Well, this bit isn't, this is a general overview of the entire challenge. We have a lengthy 11 pages (have fun marking) in the pdf in this repository for you to delve deeper. To make things slightly easier, we'll give you an overview of each part of the marking scheme that we did for you to review and check in our pdf! 
 
 The pdf is slightly chucked together, and rather than editing all of that to sound perfect and cover every point concisely, it's easier to pretty much start afresh and use that as a "technical report" to scoop up all the extra marks and prove/explain everything.
 
